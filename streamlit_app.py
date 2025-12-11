@@ -6,7 +6,7 @@ Context-Aware Chatbot assistance.
 
 Author: AI Assistant
 Version: 3.0.0 (Production)
-Theme: Light / Google Lens Style
+Theme: Ultra Light / Professional
 """
 
 import streamlit as st
@@ -42,222 +42,196 @@ st.set_page_config(
 )
 
 # ==============================================================================
-# 2. CSS STYLING SYSTEM (LIGHT THEME ENFORCEMENT)
+# 2. CSS STYLING SYSTEM (PROFESSIONAL LIGHT THEME)
 # ==============================================================================
 
 def inject_custom_css():
     """
     Injects extensive CSS to override Streamlit defaults and enforce 
-    a high-contrast Light Theme (Google Lens Aesthetic).
+    a high-contrast, professional Light Theme.
     """
     st.markdown("""
     <style>
         /* -----------------------------------------------------------
-           GLOBAL RESET & FONTS
+           1. FONTS & GLOBAL RESET
            ----------------------------------------------------------- */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
         html, body, [class*="css"] {
             font-family: 'Inter', sans-serif;
-            background-color: #FFFFFF; /* Pure White Background */
-            color: #000000 !important; /* Force Black Text */
+            background-color: #FFFFFF !important; /* Force Pure White */
+            color: #111827 !important; /* Dark Slate / Black Text */
         }
-        
-        /* Hide Streamlit Branding */
-        #MainMenu {visibility: hidden;}
-        header {visibility: hidden;}
-        footer {visibility: hidden;}
-        
-        /* Remove top padding */
+
+        /* Remove Streamlit's default top padding */
         .block-container {
-            padding-top: 1rem;
+            padding-top: 2rem;
             padding-bottom: 5rem;
         }
 
+        /* Hide Streamlit Header/Footer for clean look */
+        header {visibility: hidden;}
+        footer {visibility: hidden;}
+        #MainMenu {visibility: hidden;}
+
         /* -----------------------------------------------------------
-           TYPOGRAPHY
+           2. TYPOGRAPHY
            ----------------------------------------------------------- */
-        h1, h2, h3, h4, h5, h6 {
+        h1, h2, h3 {
             color: #111827 !important;
-            font-weight: 800 !important;
-            letter-spacing: -0.5px;
+            font-weight: 700 !important;
+            letter-spacing: -0.025em;
         }
         
-        p, span, div, label {
-            color: #1F2937 !important; /* Dark Slate for readability */
+        p, div, li {
+            color: #374151 !important; /* Soft Black for readability */
+            line-height: 1.6;
         }
-        
-        .big-brand-title {
-            font-size: 48px;
-            background: linear-gradient(90deg, #2563EB, #4F46E5);
+
+        .brand-title {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #2563EB, #1E40AF);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
+            margin-bottom: 0.5rem;
+        }
+
+        .brand-subtitle {
+            font-size: 1.1rem;
+            color: #6B7280 !important;
+            font-weight: 400;
         }
 
         /* -----------------------------------------------------------
-           COMPONENTS: UPLOAD AREA
+           3. CONTAINER STYLES
            ----------------------------------------------------------- */
-        .upload-wrapper {
-            background: #F8FAFC;
-            border: 2px dashed #CBD5E1;
-            border-radius: 24px;
+        /* Upload Area */
+        .upload-container {
+            border: 2px dashed #E5E7EB;
+            background-color: #F9FAFB;
+            border-radius: 16px;
             padding: 40px;
             text-align: center;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease-in-out;
         }
-        .upload-wrapper:hover {
+        .upload-container:hover {
             border-color: #2563EB;
-            background: #EFF6FF;
-        }
-        
-        /* Force Streamlit Uploader to look cleaner */
-        [data-testid='stFileUploader'] {
-            width: 100%;
-        }
-        [data-testid='stFileUploader'] section {
-            background-color: transparent;
-            padding: 0;
-            border: none;
+            background-color: #EFF6FF;
         }
 
-        /* -----------------------------------------------------------
-           COMPONENTS: ID CARD (LEFT PANEL)
-           ----------------------------------------------------------- */
-        .id-card-container {
+        /* ID Card (Left Panel) */
+        .id-card {
             background: #FFFFFF;
             border: 1px solid #E5E7EB;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             overflow: hidden;
             height: 100%;
         }
-        
-        .id-card-header {
+
+        .id-content {
             padding: 24px;
-            border-bottom: 1px solid #F1F5F9;
         }
-        
-        .breed-header-text {
-            font-size: 32px;
-            margin: 0;
-            color: #111827;
-        }
-        
-        .confidence-badge {
-            background-color: #DCFCE7; /* Light Green */
-            color: #166534 !important; /* Dark Green Text */
-            padding: 6px 12px;
-            border-radius: 100px;
-            font-size: 14px;
-            font-weight: 700;
+
+        .confidence-pill {
             display: inline-block;
-            margin-bottom: 10px;
+            background-color: #DCFCE7;
+            color: #15803D !important;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 12px;
         }
 
-        .bio-box {
-            padding: 24px;
-            background-color: #F8FAFC;
-            margin: 20px;
-            border-radius: 12px;
-            border-left: 4px solid #2563EB;
-            font-style: italic;
-        }
-
-        /* -----------------------------------------------------------
-           COMPONENTS: CHAT INTERFACE (RIGHT PANEL)
-           ----------------------------------------------------------- */
-        .chat-panel-container {
+        /* Chat Panel (Right Panel) */
+        .chat-panel {
             background: #FFFFFF;
             border: 1px solid #E5E7EB;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.06);
-            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 24px;
+            height: 100%;
             min-height: 600px;
             display: flex;
             flex-direction: column;
         }
-        
-        .chat-header-bar {
+
+        .chat-header {
+            border-bottom: 1px solid #F3F4F6;
+            padding-bottom: 16px;
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #E5E7EB;
-            margin-bottom: 20px;
-        }
-        
-        /* Chat Bubbles */
-        .chat-message-container {
-            display: flex;
-            margin-bottom: 15px;
-            width: 100%;
-        }
-        
-        .chat-bubble {
-            padding: 14px 18px;
-            border-radius: 18px;
-            font-size: 15px;
-            line-height: 1.5;
-            max-width: 80%;
-            position: relative;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        
-        .user-bubble {
-            background-color: #2563EB; /* Primary Blue */
-            color: #FFFFFF !important; /* White Text */
-            border-bottom-right-radius: 4px;
-            margin-left: auto; /* Push to right */
-        }
-        
-        .bot-bubble {
-            background-color: #F1F5F9; /* Light Gray */
-            color: #1F2937 !important; /* Dark Text */
-            border-bottom-left-radius: 4px;
-            border: 1px solid #E2E8F0;
+            gap: 12px;
         }
 
         /* -----------------------------------------------------------
-           COMPONENTS: METRICS & BUTTONS
+           4. CHAT BUBBLES
            ----------------------------------------------------------- */
-        [data-testid="stMetricValue"] {
-            font-size: 20px !important;
-            color: #111827 !important;
-        }
-        [data-testid="stMetricLabel"] {
-            font-size: 14px !important;
-            color: #6B7280 !important;
+        .chat-row {
+            display: flex;
+            margin-bottom: 16px;
+            width: 100%;
         }
         
+        .bubble {
+            padding: 12px 18px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            max-width: 85%;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .bubble-user {
+            background-color: #2563EB; /* Professional Blue */
+            color: #FFFFFF !important;
+            border-bottom-right-radius: 2px;
+            margin-left: auto; /* Right align */
+        }
+
+        .bubble-bot {
+            background-color: #F3F4F6; /* Light Gray */
+            color: #1F2937 !important;
+            border: 1px solid #E5E7EB;
+            border-bottom-left-radius: 2px;
+            margin-right: auto; /* Left align */
+        }
+
+        /* -----------------------------------------------------------
+           5. BUTTONS & INPUTS
+           ----------------------------------------------------------- */
         .stButton > button {
             background-color: #2563EB;
-            color: white !important;
-            border-radius: 12px;
+            color: #FFFFFF !important;
             border: none;
-            padding: 12px 24px;
+            padding: 10px 24px;
+            border-radius: 8px;
             font-weight: 600;
+            transition: background 0.2s;
             width: 100%;
-            transition: background-color 0.2s;
         }
         .stButton > button:hover {
             background-color: #1D4ED8;
         }
         
-        /* ERROR STATES */
-        .error-state-box {
-            background-color: #FEF2F2;
-            border: 2px solid #FECACA;
-            border-radius: 20px;
-            padding: 40px;
-            text-align: center;
+        /* Input Field Styling */
+        [data-testid="stChatInput"] {
+            border-radius: 12px;
+            border: 1px solid #E5E7EB;
         }
-        .error-title {
-            color: #991B1B !important;
-            font-size: 28px;
-            font-weight: 800;
+
+        /* Metrics */
+        [data-testid="stMetricValue"] {
+            font-size: 1.25rem !important;
+            color: #111827 !important;
         }
-        
+        [data-testid="stMetricLabel"] {
+            font-size: 0.875rem !important;
+            color: #6B7280 !important;
+        }
+
     </style>
     """, unsafe_allow_html=True)
 
@@ -265,11 +239,10 @@ def inject_custom_css():
 inject_custom_css()
 
 # ==============================================================================
-# 3. COMPREHENSIVE BREED DATABASE (The "Brain")
+# 3. COMPREHENSIVE BREED DATABASE
 # ==============================================================================
 
 BREED_KNOWLEDGE_BASE = {
-    # --- WORKING GROUP ---
     "Siberian Husky": {
         "Origin": "Siberia",
         "Life Span": "12-14 years",
@@ -325,8 +298,6 @@ BREED_KNOWLEDGE_BASE = {
         "Training": "gentle giant, but needs obedience training due to size.",
         "Bio": "The easygoing Great Dane, the 'Apollo of Dogs', is a total joy to live with—but owning a dog of such imposing size, weight, and strength is a commitment not to be entered into lightly."
     },
-
-    # --- SPORTING GROUP ---
     "Golden Retriever": {
         "Origin": "Scotland",
         "Life Span": "10-12 years",
@@ -360,8 +331,6 @@ BREED_KNOWLEDGE_BASE = {
         "Training": "Gentle training methods. Can be sensitive.",
         "Bio": "The Cocker Spaniel is a beloved companion dog breed, though they remain a capable bird dog at heart. Beautiful, sweet-natured, and moderately active."
     },
-
-    # --- TOY GROUP ---
     "Pug": {
         "Origin": "China",
         "Life Span": "13-15 years",
@@ -395,8 +364,6 @@ BREED_KNOWLEDGE_BASE = {
         "Training": "Can be difficult to housebreak.",
         "Bio": "Shih Tzu means 'Lion Dog', but they are lovers, not fighters. Bred solely to be companions, they are affectionate, happy, and outgoing house dogs who love nothing more than to follow their people from room to room."
     },
-
-    # --- HOUND GROUP ---
     "Beagle": {
         "Origin": "United Kingdom",
         "Life Span": "10-15 years",
@@ -419,8 +386,6 @@ BREED_KNOWLEDGE_BASE = {
         "Training": "Independent and stubborn. Patience required.",
         "Bio": "The Dachshund is an icon of pure dogdom. Their long, low silhouette, ever-alert expression, and bold, vivacious personality have made him a superstar of the canine kingdom."
     },
-
-    # --- NON-SPORTING / OTHERS ---
     "Bulldog": {
         "Origin": "United Kingdom",
         "Life Span": "8-10 years",
@@ -445,7 +410,6 @@ BREED_KNOWLEDGE_BASE = {
     }
 }
 
-# Fallback data for breeds not in the detailed list
 FALLBACK_DATA = {
     "Origin": "International",
     "Life Span": "10-13 years",
@@ -459,26 +423,20 @@ FALLBACK_DATA = {
 }
 
 # ==============================================================================
-# 4. UTILITY FUNCTIONS & LOGIC
+# 4. LOGIC & UTILITIES
 # ==============================================================================
 
 @st.cache_resource
 def load_model_engine():
     """
     Loads the Keras model and the class names file.
-    Uses caching to prevent reloading on every interaction (Speed optimization).
     """
-    # Check if files exist
     if not os.path.exists(MODEL_FILE_PATH):
         return None, None
-        
     try:
         model = tf.keras.models.load_model(MODEL_FILE_PATH)
-        
-        # Load classes
         with open(CLASSES_FILE_PATH, 'r') as f:
             classes = [line.strip() for line in f.readlines()]
-            
         return model, classes
     except Exception as e:
         st.error(f"Error loading model: {e}")
@@ -487,9 +445,6 @@ def load_model_engine():
 def preprocess_image(image):
     """
     Prepares an uploaded image for the Neural Network.
-    1. Converts to RGB (removes Alpha channel)
-    2. Resizes to 224x224 (Model Requirement)
-    3. Converts to Array and adds Batch Dimension
     """
     img = image.convert('RGB')
     img = ImageOps.fit(img, (IMG_WIDTH, IMG_HEIGHT), Image.LANCZOS)
@@ -499,62 +454,38 @@ def preprocess_image(image):
 
 def lookup_breed_info(breed_name):
     """
-    Smart dictionary lookup. Tries exact match, then partial match.
+    Smart dictionary lookup.
     """
-    # 1. Exact Match
     if breed_name in BREED_KNOWLEDGE_BASE:
         return BREED_KNOWLEDGE_BASE[breed_name]
-    
-    # 2. Fuzzy Match (e.g., "Standard Poodle" -> matches "Poodle")
     for key in BREED_KNOWLEDGE_BASE:
         if key in breed_name or breed_name in key:
             return BREED_KNOWLEDGE_BASE[key]
-            
-    # 3. Fallback
     return FALLBACK_DATA
 
 def generate_chat_response(breed_name, user_query):
     """
-    Rule-based NLP engine to answer questions about the specific dog breed.
+    Rule-based NLP engine.
     """
     query = user_query.lower()
     info = lookup_breed_info(breed_name)
     
-    # Keyword Analysis
-    
-    # Diet / Food
     if any(word in query for word in ["eat", "food", "diet", "feed", "hungry", "treats"]):
         return f"🍖 **Dietary Advice:** {info['Diet']}"
-    
-    # Origin / History
     elif any(word in query for word in ["origin", "from", "country", "history", "where"]):
         return f"🌍 **Origin:** The {breed_name} originates from {info['Origin']}."
-    
-    # Lifespan / Age
     elif any(word in query for word in ["live", "life", "age", "years", "old", "die"]):
         return f"⏳ **Lifespan:** The {breed_name} typically lives for {info['Life Span']}."
-        
-    # Weather / Climate
     elif any(word in query for word in ["weather", "cold", "hot", "winter", "summer", "climate", "temp"]):
         return f"☀️ **Climate Preference:** {info['Climate']}"
-        
-    # Grooming / Shedding
     elif any(word in query for word in ["groom", "brush", "hair", "shed", "fur", "bath"]):
         return f"🛁 **Grooming:** {info.get('Grooming', 'Regular brushing recommended.')}"
-        
-    # Training / Behavior
     elif any(word in query for word in ["train", "sit", "stay", "behavior", "smart", "intelligent"]):
         return f"🎓 **Training:** {info.get('Training', 'Positive reinforcement works best.')}"
-        
-    # Height / Size
     elif any(word in query for word in ["big", "small", "size", "height", "weight", "tall"]):
         return f"📏 **Size:** They typically stand {info.get('Height', 'Varies')} tall."
-    
-    # General / Greeting
     elif any(word in query for word in ["hello", "hi", "hey"]):
         return f"Woof! I am your {breed_name} expert. Ask me about my diet, health, or history!"
-        
-    # Fallback for unknown questions
     else:
         return f"That's an interesting question about the **{breed_name}**. While I specialize in their biology and care, generally speaking: {info['Bio']}"
 
@@ -563,7 +494,7 @@ def generate_chat_response(breed_name, user_query):
 # ==============================================================================
 
 if 'page_view' not in st.session_state:
-    st.session_state.page_view = 'LANDING' # Options: LANDING, RESULT
+    st.session_state.page_view = 'LANDING'
 
 if 'analysis_data' not in st.session_state:
     st.session_state.analysis_data = None
@@ -578,235 +509,186 @@ def navigate_to_home():
     st.rerun()
 
 # ==============================================================================
-# 6. UI COMPONENT RENDERING
+# 6. UI RENDERERS
 # ==============================================================================
 
 def render_landing_page():
     """
-    Renders the Home/Upload Screen.
+    Renders the Home/Upload Screen with Professional styling.
     """
-    # Header Section
-    st.markdown("<div style='text-align: center; padding-top: 20px;'>", unsafe_allow_html=True)
-    st.image("https://cdn-icons-png.flaticon.com/512/616/616408.png", width=80) # Generic Dog Icon
-    st.markdown("<h1 class='big-brand-title'>PawIdentify Pro</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='font-size: 18px; color: #64748B;'>Advanced AI Breed Detection & Veterinary Chatbot</p>", unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown("<br>", unsafe_allow_html=True)
     
-    st.write("---")
-
-    # Upload Section (Centered)
+    # Clean, centered header
+    st.markdown("""
+        <div style='text-align: center; margin-bottom: 40px;'>
+            <div style='font-size: 80px; margin-bottom: 10px;'>🐕</div>
+            <h1 class='brand-title'>PawIdentify Pro</h1>
+            <p class='brand-subtitle'>Professional Grade AI Breed Detection & Veterinary Assistant</p>
+        </div>
+    """, unsafe_allow_html=True)
+    
     col1, col2, col3 = st.columns([1, 2, 1])
     
     with col2:
-        st.markdown("<div class='upload-wrapper'>", unsafe_allow_html=True)
-        st.markdown("<h3>📸 Upload Dog Photo</h3>", unsafe_allow_html=True)
-        st.caption("Supports JPG, PNG, JPEG")
+        st.markdown("<div class='upload-container'>", unsafe_allow_html=True)
+        st.markdown("<h3 style='margin-bottom: 10px;'>Analyze Dog Image</h3>", unsafe_allow_html=True)
+        st.markdown("<p style='font-size: 14px; color: #9CA3AF !important;'>Upload a clear JPEG or PNG image</p>", unsafe_allow_html=True)
         
         uploaded_file = st.file_uploader("", type=['jpg','png','jpeg'], label_visibility="collapsed")
         st.markdown("</div>", unsafe_allow_html=True)
-
-    # Footer Info
-    st.markdown("<br><br><br>", unsafe_allow_html=True)
-    fc1, fc2, fc3 = st.columns(3)
-    fc1.info("🔍 **98% Accuracy** on 120 breeds")
-    fc2.info("⚡ **Instant Analysis** via TensorFlow")
-    fc3.info("💬 **Expert Chat** for care advice")
+    
+    # Features footer
+    st.markdown("<br><br>", unsafe_allow_html=True)
+    f1, f2, f3 = st.columns(3)
+    f1.info("**98% Accuracy**\n\nTrained on Stanford Dataset")
+    f2.info("**Instant Analysis**\n\nPowered by TensorFlow")
+    f3.info("**Expert Chatbot**\n\nContext-aware advice")
 
     return uploaded_file
 
 def render_result_dashboard():
     """
-    Renders the Split-Screen Result View (Profile + Chat).
+    Renders the Result View (Split Screen).
     """
     data = st.session_state.analysis_data
     breed = data['breed']
     conf = data['conf']
     img = data['image']
-    
-    # Fetch Breed Details
     info = lookup_breed_info(breed)
     
-    # ---------------------------------------------------------
-    # LAYOUT: Two Columns (Left: Profile, Right: Chat)
-    # ---------------------------------------------------------
-    left_col, right_col = st.columns([1, 1.4], gap="large")
+    # Layout
+    left_col, right_col = st.columns([1, 1.4], gap="medium")
     
-    # --- LEFT COLUMN: ID CARD ---
+    # --- LEFT: ID CARD ---
     with left_col:
-        # Image Display
         st.image(img, use_container_width=True)
         
-        # ID Card Container
-        st.markdown("<div class='id-card-container'>", unsafe_allow_html=True)
-        
-        # Header
+        st.markdown("<div class='id-card'>", unsafe_allow_html=True)
         st.markdown(f"""
-            <div class='id-card-header'>
-                <div class='confidence-badge'>Match Confidence: {conf:.1f}%</div>
-                <h1 class='breed-header-text'>{breed}</h1>
-                <p style='color: #6B7280; margin:0;'>{info.get('Group', 'Unknown')} Group</p>
+            <div class='id-content'>
+                <div class='confidence-pill'>Match: {conf:.1f}%</div>
+                <h2 style='margin:0; font-size: 28px;'>{breed}</h2>
+                <p style='color: #6B7280; margin-top: 5px;'>{info.get('Group', 'Unknown')} Group</p>
+                <hr style='border: 0; border-top: 1px solid #F3F4F6; margin: 20px 0;'>
+                <p style='font-style: italic; color: #4B5563 !important;'>"{info.get('Bio', '')}"</p>
             </div>
         """, unsafe_allow_html=True)
         
-        # Stats using Native Streamlit Metrics (Safe & Clean)
-        m1, m2 = st.columns(2)
-        with m1:
-            st.metric("🌍 Origin", info.get("Origin", "Unknown"))
-            st.metric("📏 Height", info.get("Height", "Varies"))
-        with m2:
-            st.metric("⏳ Lifespan", info.get("Life Span", "Unknown"))
-            st.metric("🌡️ Climate", "See Chat")
+        # Stats below bio
+        c1, c2 = st.columns(2)
+        with c1:
+            st.metric("Origin", info.get("Origin", "Unknown"))
+        with c2:
+            st.metric("Lifespan", info.get("Life Span", "Unknown"))
             
-        # Bio Box
-        st.markdown(f"<div class='bio-box'>{info.get('Bio', 'No bio available.')}</div>", unsafe_allow_html=True)
-        
         st.markdown("</div>", unsafe_allow_html=True) # End Card
         
-        # Reset Button
         st.markdown("<br>", unsafe_allow_html=True)
-        if st.button("⬅ Scan Another Dog"):
+        if st.button("⬅ Analyze Another"):
             navigate_to_home()
 
-    # --- RIGHT COLUMN: CHATBOT ---
+    # --- RIGHT: CHAT ---
     with right_col:
-        st.markdown("<div class='chat-panel-container'>", unsafe_allow_html=True)
+        st.markdown("<div class='chat-panel'>", unsafe_allow_html=True)
         
         # Chat Header
         st.markdown(f"""
-            <div class='chat-header-bar'>
-                <span style='font-size: 24px;'>💬</span>
+            <div class='chat-header'>
+                <div style='background: #EFF6FF; padding: 10px; border-radius: 50%; color: #2563EB;'>💬</div>
                 <div>
-                    <div style='font-weight: 700; font-size: 18px;'>{breed} Specialist</div>
-                    <div style='font-size: 12px; color: #16A34A;'>● Online</div>
+                    <div style='font-weight: 700; font-size: 18px;'>{breed} Expert</div>
+                    <div style='font-size: 12px; color: #16A34A; font-weight: 500;'>● Online Now</div>
                 </div>
             </div>
         """, unsafe_allow_html=True)
         
-        # Chat Messages Area (Scrollable container)
+        # Scrollable Chat Area
         chat_container = st.container(height=500)
         
         with chat_container:
             for msg in st.session_state.chat_messages:
                 if msg['role'] == 'user':
-                    # User Message (Right Aligned, Blue)
                     st.markdown(f"""
-                        <div class='chat-message-container' style='justify-content: flex-end;'>
-                            <div class='chat-bubble user-bubble'>{msg['content']}</div>
+                        <div class='chat-row'>
+                            <div class='bubble bubble-user'>{msg['content']}</div>
                         </div>
                     """, unsafe_allow_html=True)
                 else:
-                    # Bot Message (Left Aligned, Gray)
                     st.markdown(f"""
-                        <div class='chat-message-container' style='justify-content: flex-start;'>
-                            <div class='chat-bubble bot-bubble'>{msg['content']}</div>
+                        <div class='chat-row'>
+                            <div class='bubble bubble-bot'>{msg['content']}</div>
                         </div>
                     """, unsafe_allow_html=True)
         
-        st.markdown("</div>", unsafe_allow_html=True) # End Chat Panel Wrapper
+        st.markdown("</div>", unsafe_allow_html=True) # End Panel
 
-        # Chat Input (Native Streamlit Input)
-        # We place this *outside* the custom div so Streamlit handles the binding correctly
-        if prompt := st.chat_input(f"Ask about {breed} diet, training, etc..."):
-            # 1. Add User Message
+        # Input
+        if prompt := st.chat_input(f"Ask about diet, grooming, etc..."):
             st.session_state.chat_messages.append({"role": "user", "content": prompt})
-            
-            # 2. Generate Response
             response = generate_chat_response(breed, prompt)
-            
-            # 3. Add Bot Message
             st.session_state.chat_messages.append({"role": "bot", "content": response})
-            
-            # 4. Refresh to show new messages
             st.rerun()
 
 def render_error_screen(conf):
     """
-    Renders the 'No Dog Detected' screen when confidence is low.
+    Renders 'No Dog Detected' screen.
     """
     st.markdown("<br><br>", unsafe_allow_html=True)
     c1, c2, c3 = st.columns([1, 2, 1])
     with c2:
-        st.markdown(f"""
-            <div class='error-state-box'>
-                <div style='font-size: 60px; margin-bottom: 20px;'>🐕❓</div>
-                <h1 class='error-title'>No Dog Detected</h1>
-                <p style='font-size: 18px; margin-bottom: 5px; color: #000 !important;'>Analysis Confidence: <b>{conf:.1f}%</b></p>
-                <p style='color: #4B5563 !important;'>The AI is not confident that the image contains a known dog breed.<br>
-                Please try uploading a clearer photo.</p>
-            </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("<br>", unsafe_allow_html=True)
+        st.error(f"Low Confidence ({conf:.1f}%). No known dog breed detected.")
         if st.button("Try Again"):
             navigate_to_home()
 
 # ==============================================================================
-# 7. MAIN APP EXECUTION FLOW
+# 7. MAIN EXECUTION
 # ==============================================================================
 
 def main():
-    
-    # 1. Routing Logic
     if st.session_state.page_view == 'LANDING':
-        
-        # Render Home & Handle Upload
         file = render_landing_page()
         
         if file:
-            # Perform Analysis
-            with st.spinner("🧠 AI is analyzing breed features..."):
-                
-                # Check for Model
-                if not os.path.exists(MODEL_FILE_PATH):
-                    st.error("⚠️ Critical Error: 'final_model.keras' not found. Please train the model first.")
-                    st.stop()
-                
-                # Load Model (Cached)
+            with st.spinner("Analyzing image..."):
+                # Load Resources
                 model, classes = load_model_engine()
                 
-                if model is None:
-                    st.error("Failed to load model.")
+                if not model:
+                    st.error("Model file not found. Please check setup.")
                     st.stop()
                 
-                # Image Preprocessing
-                image = Image.open(file).convert('RGB')
-                img_resized = ImageOps.fit(image, (IMG_HEIGHT, IMG_WIDTH), Image.LANCZOS)
-                img_array = tf.keras.preprocessing.image.img_to_array(img_resized)
-                img_array = np.expand_dims(img_array, axis=0)
-                
-                # Inference
+                # Predict
+                img = Image.open(file).convert('RGB')
+                img_array = preprocess_image(img)
                 preds = model.predict(img_array)
                 score = preds[0]
                 top_idx = np.argmax(score)
                 conf = 100 * np.max(score)
                 
-                # Result Formatting
+                # Format Name
                 raw_name = classes[top_idx]
                 breed_name = raw_name.split('-', 1)[1].replace('_', ' ').title() if '-' in raw_name else raw_name
                 
-                # Update Session State
+                # Store State
                 st.session_state.analysis_data = {
-                    "image": image,
+                    "image": img,
                     "breed": breed_name,
                     "conf": conf
                 }
                 
-                # Initialize Chat with Context
+                # Initial Greeting
                 st.session_state.chat_messages = [{
                     "role": "bot", 
-                    "content": f"Hello! I've identified this as a **{breed_name}**. I am an expert on this breed. Ask me anything!"
+                    "content": f"Hello! I've identified this as a **{breed_name}**. I can help you with care tips, diet, and training advice. What would you like to know?"
                 }]
                 
                 st.session_state.page_view = 'RESULT'
                 st.rerun()
 
     elif st.session_state.page_view == 'RESULT':
-        
-        # Check Confidence Threshold
-        confidence = st.session_state.analysis_data['conf']
-        
-        if confidence < CONFIDENCE_THRESHOLD:
-            render_error_screen(confidence)
+        conf = st.session_state.analysis_data['conf']
+        if conf < CONFIDENCE_THRESHOLD:
+            render_error_screen(conf)
         else:
             render_result_dashboard()
 
