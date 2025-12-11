@@ -8,237 +8,288 @@ from PIL import Image, ImageOps
 # 1. PAGE CONFIGURATION
 # ==========================================
 st.set_page_config(
-    page_title="PawPedia AI",
+    page_title="PawPrint ID",
     page_icon="🐾",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
 # ==========================================
-# 2. CSS STYLING (Modern & Clean)
+# 2. BRANDED UI DESIGN (CSS)
 # ==========================================
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
 
-    /* GLOBAL RESET */
+    /* GLOBAL THEME */
     .stApp {
-        background-color: #F8FAFC;
-        font-family: 'Poppins', sans-serif;
-        color: #1E293B;
+        background-color: #FFF8F0; /* Soft Warm White */
+        font-family: 'Nunito', sans-serif;
+        color: #2D3748;
     }
     
-    /* HIDE DEFAULT STREAMLIT ELEMENTS */
+    /* HIDE DEFAULTS */
     header, footer, #MainMenu {visibility: hidden;}
 
-    /* --- GIANT UPLOAD AREA (HOME PAGE) --- */
-    .big-upload-box {
-        background: white;
-        padding: 60px;
-        border-radius: 30px;
-        border: 2px dashed #CBD5E1;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.05);
+    /* --- HOME SCREEN --- */
+    .hero-section {
         text-align: center;
-        max-width: 800px;
-        margin: 40px auto;
-        transition: all 0.3s ease;
+        padding: 50px 20px;
     }
-    .big-upload-box:hover {
-        border-color: #6366F1;
-        transform: translateY(-5px);
-    }
-    .icon-large {
-        font-size: 80px;
-        margin-bottom: 20px;
-    }
-    .title-large {
-        font-size: 42px;
-        font-weight: 800;
-        background: linear-gradient(135deg, #6366F1, #8B5CF6);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+    .brand-logo {
+        font-size: 60px;
         margin-bottom: 10px;
+        display: inline-block;
+        filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
     }
-    
-    /* MAKE FILE UPLOADER HUGE */
-    [data-testid='stFileUploader'] {
-        width: 100%;
-        padding: 20px;
+    .brand-name {
+        font-size: 48px;
+        font-weight: 800;
+        color: #D97706; /* Warm Amber */
+        margin: 0;
+        letter-spacing: -1px;
     }
-    [data-testid='stFileUploader'] section {
-        padding: 40px;
-        background-color: #F1F5F9;
-        border-radius: 20px;
-    }
-    [data-testid='stFileUploader'] button {
-        display: none; /* Hide the small button inside */
+    .brand-tagline {
+        color: #718096;
+        font-size: 18px;
+        font-weight: 600;
     }
 
-    /* --- PROFILE CARD (LEFT SIDE) --- */
-    .profile-card {
+    /* UPLOAD BOX */
+    .upload-card {
+        background: white;
+        border-radius: 30px;
+        padding: 40px;
+        box-shadow: 0 20px 40px rgba(217, 119, 6, 0.1);
+        border: 2px dashed #FBD38D;
+        text-align: center;
+        transition: transform 0.2s;
+        max-width: 700px;
+        margin: 30px auto;
+    }
+    .upload-card:hover {
+        border-color: #D97706;
+        transform: scale(1.01);
+    }
+
+    /* --- RESULT DASHBOARD --- */
+    .dashboard-container {
+        padding: 20px;
+    }
+    
+    /* ID CARD (Left) */
+    .id-card {
         background: white;
         border-radius: 24px;
-        padding: 30px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-        border: 1px solid #E2E8F0;
-        height: 100%;
+        padding: 0;
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        border: 1px solid #EDF2F7;
     }
-    .breed-title {
+    .id-header {
+        background: #FFFAF0;
+        padding: 25px;
+        border-bottom: 1px solid #FEEBC8;
+        text-align: center;
+    }
+    .breed-name {
         font-size: 32px;
-        font-weight: 700;
-        color: #1E293B;
-        margin-top: 15px;
-        margin-bottom: 10px;
+        font-weight: 800;
+        color: #2D3748;
+        margin: 10px 0 5px 0;
     }
-    .confidence-tag {
-        background: #EEF2FF;
-        color: #4F46E5;
-        padding: 8px 16px;
-        border-radius: 100px;
-        font-weight: 600;
+    .match-badge {
+        background: #C6F6D5;
+        color: #22543D;
+        padding: 6px 14px;
+        border-radius: 50px;
+        font-weight: 700;
         font-size: 14px;
         display: inline-block;
     }
     
-    /* DATA TABLE */
-    .data-row {
-        display: flex;
-        justify-content: space-between;
-        padding: 15px 0;
-        border-bottom: 1px solid #F1F5F9;
+    .stats-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        padding: 20px;
+        gap: 20px;
     }
-    .data-label { color: #64748B; font-weight: 500; }
-    .data-value { color: #0F172A; font-weight: 600; text-align: right; }
+    .stat-box {
+        background: #F7FAFC;
+        padding: 15px;
+        border-radius: 16px;
+        text-align: center;
+    }
+    .stat-label {
+        font-size: 12px;
+        text-transform: uppercase;
+        color: #A0AEC0;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+    .stat-value {
+        font-size: 16px;
+        font-weight: 700;
+        color: #4A5568;
+        margin-top: 5px;
+    }
+    
+    .bio-section {
+        padding: 0 25px 25px 25px;
+        color: #718096;
+        font-size: 15px;
+        line-height: 1.6;
+        text-align: center;
+    }
 
-    /* --- CHATBOT (RIGHT SIDE) --- */
-    .chat-box {
+    /* CHATBOT (Right) */
+    .chat-panel {
         background: white;
         border-radius: 24px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-        border: 1px solid #E2E8F0;
-        padding: 20px;
-        height: 650px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        border: 1px solid #EDF2F7;
+        height: 700px;
         display: flex;
         flex-direction: column;
+        overflow: hidden;
     }
-    .chat-header {
-        font-size: 18px;
+    .chat-header-bar {
+        background: #D97706;
+        color: white;
+        padding: 20px;
         font-weight: 700;
-        color: #334155;
-        padding-bottom: 15px;
-        border-bottom: 1px solid #F1F5F9;
-        margin-bottom: 15px;
+        font-size: 18px;
         display: flex;
         align-items: center;
         gap: 10px;
     }
     
     /* MESSAGES */
-    .msg-container {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-        overflow-y: auto;
-        height: 100%;
-        padding-right: 10px;
-    }
     .chat-bubble {
-        padding: 12px 18px;
+        padding: 14px 18px;
         border-radius: 18px;
-        max-width: 85%;
-        font-size: 14px;
+        max-width: 80%;
+        font-size: 15px;
         line-height: 1.5;
-        position: relative;
+        margin-bottom: 12px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.03);
     }
-    .user-bubble {
-        background: #4F46E5;
+    .user-msg {
+        background: #2D3748;
         color: white;
         align-self: flex-end;
         border-bottom-right-radius: 4px;
+        margin-left: auto;
     }
-    .bot-bubble {
-        background: #F1F5F9;
-        color: #1E293B;
+    .bot-msg {
+        background: #F7FAFC;
+        color: #2D3748;
         align-self: flex-start;
         border-bottom-left-radius: 4px;
+        border: 1px solid #EDF2F7;
     }
 
     /* BUTTONS */
     .stButton > button {
-        background-color: #4F46E5;
+        background-color: #D97706;
         color: white;
-        border-radius: 12px;
+        border-radius: 15px;
         border: none;
         padding: 12px 0;
-        font-weight: 600;
+        font-weight: 700;
         font-size: 16px;
+        width: 100%;
         transition: all 0.2s;
     }
     .stButton > button:hover {
-        background-color: #4338CA;
+        background-color: #B7791F;
         transform: translateY(-2px);
-    }
-    
-    /* ERROR UI */
-    .error-box {
-        background: #FEF2F2;
-        border: 2px solid #FECACA;
-        border-radius: 20px;
-        padding: 40px;
-        text-align: center;
-        max-width: 500px;
-        margin: 50px auto;
     }
 </style>
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 3. KNOWLEDGE BASE (Smart Data)
+# 3. EXPANDED KNOWLEDGE BASE
 # ==========================================
-BREED_DATA = {
-    "Golden Retriever": {
-        "Origin": "Scotland", "Life": "10-12 yrs", "Group": "Sporting",
-        "Bio": "Friendly, intelligent, and devoted. They are eager to please and love water.",
-        "Diet": "2-3 cups of high-quality dry food. Avoid grains if allergic.",
-        "Training": "Very easy to train. Use treats and praise.",
-        "Health": "Watch for hip dysplasia and ear infections."
-    },
+BREED_DB = {
     "German Shepherd": {
-        "Origin": "Germany", "Life": "7-10 yrs", "Group": "Herding",
-        "Bio": "Confident, courageous, and smart. A loyal guardian and working dog.",
-        "Diet": "High-protein diet for muscle maintenance.",
-        "Training": "Requires firm, consistent leadership.",
-        "Health": "Prone to joint issues. Keep active."
+        "Origin": "Germany", "Life": "7-10 years", "Group": "Herding", "Height": "22-26 in",
+        "Bio": "A versatile working dog known for courage, loyalty, and high intelligence.",
+        "Diet": "High-protein formula (22%+) to support strong muscles.",
+        "Care": "Requires daily mental stimulation and brushing twice a week.",
+        "Temperament": "Confident, Smart, Brave"
+    },
+    "Golden Retriever": {
+        "Origin": "Scotland", "Life": "10-12 years", "Group": "Sporting", "Height": "21-24 in",
+        "Bio": "Friendly and devoted. They are eager to please and make excellent family pets.",
+        "Diet": "Balanced diet. Watch calories as they love to eat!",
+        "Care": "Daily walks and regular grooming to manage shedding.",
+        "Temperament": "Friendly, Intelligent, Devoted"
     },
     "Labrador Retriever": {
-        "Origin": "Canada", "Life": "10-12 yrs", "Group": "Sporting",
-        "Bio": "Friendly, active, and outgoing. Great family pets.",
+        "Origin": "Canada", "Life": "10-12 years", "Group": "Sporting", "Height": "21-24 in",
+        "Bio": "Outgoing and active. The most popular breed in many countries.",
         "Diet": "Prone to obesity. Measure food carefully.",
-        "Training": "Responds well to positive reinforcement.",
-        "Health": "Joint health is a priority."
-    },
-    "Pug": {
-        "Origin": "China", "Life": "13-15 yrs", "Group": "Toy",
-        "Bio": "Charming, mischievous, and loving.",
-        "Diet": "Low-calorie diet to prevent weight gain.",
-        "Training": "Can be stubborn. Be patient.",
-        "Health": "Keep cool in hot weather (Brachycephalic)."
+        "Care": "High energy needs. Good for swimming and fetch.",
+        "Temperament": "Outgoing, Gentle, Agile"
     },
     "Siberian Husky": {
-        "Origin": "Siberia", "Life": "12-14 yrs", "Group": "Working",
-        "Bio": "Loyal, outgoing, and mischievous. Born to run.",
-        "Diet": "Fish-based diet rich in Omega-3.",
-        "Training": "Independent thinkers. Keep it fun.",
-        "Health": "Check eyes regularly."
+        "Origin": "Siberia", "Life": "12-14 years", "Group": "Working", "Height": "20-23 in",
+        "Bio": "Born to run. Known for their endurance and wolf-like appearance.",
+        "Diet": "Rich in protein and fat, similar to working dogs.",
+        "Care": "Heavy shedders (blow coat twice a year). Needs running.",
+        "Temperament": "Loyal, Mischievous, Outgoing"
     },
-    # Fallback
-    "default": {
-        "Origin": "Unknown", "Life": "10-13 yrs", "Group": "Companion",
-        "Bio": "A loyal dog breed identified by AI.",
-        "Diet": "Balanced commercial dog food.",
-        "Training": "Positive reinforcement is key.",
-        "Health": "Annual vet checkups recommended."
+    "Pug": {
+        "Origin": "China", "Life": "13-15 years", "Group": "Toy", "Height": "10-13 in",
+        "Bio": "A lot of dog in a small space. Charming and loving.",
+        "Diet": "Low-calorie diet to prevent breathing issues from weight.",
+        "Care": "Clean face wrinkles daily. Avoid extreme heat.",
+        "Temperament": "Charming, Mischievous, Loving"
+    },
+    "Chihuahua": {
+        "Origin": "Mexico", "Life": "14-16 years", "Group": "Toy", "Height": "5-8 in",
+        "Bio": "A tiny dog with a huge personality. Very loyal to one person.",
+        "Diet": "Nutrient-dense small kibble.",
+        "Care": "Keep warm in cold weather. Dental care is crucial.",
+        "Temperament": "Graceful, Sassy, Devoted"
+    },
+    "Rottweiler": {
+        "Origin": "Germany", "Life": "9-10 years", "Group": "Working", "Height": "22-27 in",
+        "Bio": "A robust and powerful guardian. Loyal to their family.",
+        "Diet": "High quality protein for muscle mass.",
+        "Care": "Early socialization is mandatory. Moderate grooming.",
+        "Temperament": "Loyal, Confident, Fearless"
+    },
+    "Beagle": {
+        "Origin": "UK", "Life": "10-15 years", "Group": "Hound", "Height": "13-15 in",
+        "Bio": "Merry and curious. Guided by their powerful nose.",
+        "Diet": "Strict portion control. They are food obsessed.",
+        "Care": "Keep on leash; they will follow scents anywhere.",
+        "Temperament": "Merry, Curious, Friendly"
+    },
+    "Bulldog": {
+        "Origin": "UK", "Life": "8-10 years", "Group": "Non-Sporting", "Height": "14-15 in",
+        "Bio": "Calm and courageous. Known for their loose skin and pushed-in nose.",
+        "Diet": "Easy-to-digest food to reduce gas.",
+        "Care": "Low energy, minimal exercise needed. Clean folds.",
+        "Temperament": "Docile, Willful, Friendly"
+    },
+    "Poodle": {
+        "Origin": "France/Germany", "Life": "10-18 years", "Group": "Non-Sporting", "Height": "Varies",
+        "Bio": "Beneath the curly coat is an elegant athlete and genius mind.",
+        "Diet": "High quality fat for coat health.",
+        "Care": "Professional grooming required every 4-6 weeks.",
+        "Temperament": "Active, Proud, Very Smart"
     }
+}
+
+FALLBACK_DATA = {
+    "Origin": "International", "Life": "10-13 years", "Group": "Mixed/Unknown", "Height": "Varies",
+    "Bio": "A loyal canine companion.",
+    "Diet": "Standard balanced dog food appropriate for size.",
+    "Care": "Regular vet checkups and daily walks.",
+    "Temperament": "Loyal, Friendly"
 }
 
 # ==========================================
@@ -252,67 +303,65 @@ if 'page' not in st.session_state: st.session_state.page = 'HOME'
 if 'data' not in st.session_state: st.session_state.data = None
 if 'chat_history' not in st.session_state: st.session_state.chat_history = []
 
-def reset_app():
+def reset():
     st.session_state.page = 'HOME'
     st.session_state.data = None
     st.session_state.chat_history = []
     st.rerun()
 
-def get_breed_info(name):
-    for key in BREED_DATA:
-        if key in name: return BREED_DATA[key]
-    return BREED_DATA["default"]
+def get_info(name):
+    # Fuzzy Search
+    for key in BREED_DB:
+        if key in name: return BREED_DB[key]
+    return FALLBACK_DATA
 
-def smart_reply(breed, text):
+def smart_bot_response(breed, text):
     text = text.lower()
-    info = get_breed_info(breed)
+    info = get_info(breed)
     
-    if any(x in text for x in ["food", "diet", "eat", "feed"]):
-        return f"🍖 **Diet:** {info['Diet']}"
-    elif any(x in text for x in ["train", "teach", "sit"]):
-        return f"🎓 **Training:** {info['Training']}"
-    elif any(x in text for x in ["health", "sick", "care"]):
-        return f"❤️ **Health:** {info['Health']}"
+    if any(x in text for x in ["food", "diet", "eat", "feed", "hungry"]):
+        return f"🍖 **Dietary Advice:** {info['Diet']}"
+    elif any(x in text for x in ["groom", "brush", "bath", "care", "shed"]):
+        return f"🛁 **Grooming & Care:** {info['Care']}"
+    elif any(x in text for x in ["size", "height", "weight", "big", "small"]):
+        return f"📏 **Size:** This breed typically stands {info['Height']} tall."
     elif any(x in text for x in ["origin", "from", "history"]):
-        return f"🌍 **Origin:** {info['Origin']}."
+        return f"🌍 **Origin:** The {breed} comes from {info['Origin']}."
+    elif any(x in text for x in ["life", "age", "old", "live"]):
+        return f"⏳ **Lifespan:** They typically live for {info['Life']}."
     else:
-        return f"The **{breed}** is known for being {info['Bio'].lower()} Ask me about their diet or training!"
+        return f"The **{breed}** is a {info['Group']} dog known for being {info['Temperament'].lower()}. Ask me about their diet, grooming, or lifespan!"
 
 # ==========================================
-# 5. UI: HOME PAGE (GIANT UPLOAD)
+# 5. UI: HOME PAGE
 # ==========================================
 if st.session_state.page == 'HOME':
     
     st.markdown("""
-    <div class="big-upload-box">
-        <div class="icon-large">🐶</div>
-        <h1 class="title-large">PawPedia AI</h1>
-        <p style="color:#64748B; font-size: 18px;">
-            The Ultimate Dog Identifier & Chatbot
-        </p>
-    </div>
+        <div class="hero-section">
+            <div class="brand-logo">🐾</div>
+            <h1 class="brand-name">PawPrint ID</h1>
+            <p class="brand-tagline">Identify breeds & Chat with AI Experts</p>
+        </div>
     """, unsafe_allow_html=True)
+
+    st.markdown('<div class="upload-card">', unsafe_allow_html=True)
+    st.markdown("### 📸 Upload a Photo")
+    st.markdown("<p style='color:#A0AEC0; margin-bottom:20px;'>Supports JPG, PNG</p>", unsafe_allow_html=True)
     
-    # Giant Upload Area
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        # Custom Label
-        st.markdown("<h3 style='text-align:center; color:#475569;'>Upload a photo below</h3>", unsafe_allow_html=True)
-        uploaded_file = st.file_uploader("", type=['jpg','png','jpeg'], label_visibility="collapsed")
+    uploaded_file = st.file_uploader("", type=['jpg','png','jpeg'], label_visibility="collapsed")
+    st.markdown('</div>', unsafe_allow_html=True)
 
     if uploaded_file:
-        with st.spinner("🧠 AI is analyzing breed features..."):
+        with st.spinner("🔍 Analyzing breed characteristics..."):
             import tensorflow as tf
-            
             if not os.path.exists(MODEL_PATH):
-                st.error("Model missing.")
+                st.error("⚠️ Model not found! Please run training script.")
                 st.stop()
-                
-            model = tf.keras.models.load_model(MODEL_PATH)
-            with open(CLASSES_PATH, 'r') as f:
-                classes = [line.strip() for line in f.readlines()]
             
-            # Predict
+            model = tf.keras.models.load_model(MODEL_PATH)
+            with open(CLASSES_PATH, 'r') as f: classes = [x.strip() for x in f.readlines()]
+            
             image = Image.open(uploaded_file).convert('RGB')
             img_resized = ImageOps.fit(image, (224, 224), Image.LANCZOS)
             img_array = tf.keras.preprocessing.image.img_to_array(img_resized)
@@ -324,100 +373,112 @@ if st.session_state.page == 'HOME':
             conf = 100 * np.max(score)
             
             raw_name = classes[top_idx]
+            # Name Cleaning
             breed_name = raw_name.split('-', 1)[1].replace('_', ' ').title() if '-' in raw_name else raw_name
             
             st.session_state.data = {"image": image, "breed": breed_name, "conf": conf}
-            st.session_state.chat_history = [{"role": "bot", "content": f"Hello! I see this is a **{breed_name}**. Ask me anything about them!"}]
-            
+            st.session_state.chat_history = [{"role": "assistant", "content": f"Woof! I see a **{breed_name}**. How can I help you care for them?"}]
             st.session_state.page = 'RESULT'
             st.rerun()
 
 # ==========================================
-# 6. UI: RESULT PAGE (SPLIT VIEW)
+# 6. UI: RESULT DASHBOARD
 # ==========================================
 elif st.session_state.page == 'RESULT':
     data = st.session_state.data
     breed = data['breed']
     conf = data['conf']
     
-    # --- ERROR STATE ---
+    # --- LOW CONFIDENCE CHECK ---
     if conf < CONFIDENCE_THRESHOLD:
         st.markdown(f"""
-        <div class="error-box">
-            <div style="font-size:50px;">🐕❓</div>
-            <h2 style="color:#991B1B;">No Dog Detected</h2>
-            <p style="color:#7F1D1D;">Confidence: {conf:.1f}%</p>
-            <p style="color:#7F1D1D; margin-top:10px;">
-                Our AI isn't sure this is a dog. Please upload a clearer photo.
+        <div style="text-align:center; padding:50px;">
+            <div style="font-size:60px;">🐕❓</div>
+            <h1 style="color:#C53030;">No Dog Detected</h1>
+            <p style="color:#718096; font-size:18px;">
+                Confidence: {conf:.1f}%<br>
+                Our AI isn't sure this is a dog. Please try a clearer photo.
             </p>
         </div>
         """, unsafe_allow_html=True)
         col1, col2, col3 = st.columns([1,1,1])
         with col2:
-            if st.button("Try Again"): reset_app()
+            if st.button("Try Again"): reset()
             
-    # --- SUCCESS STATE ---
+    # --- SUCCESS DASHBOARD ---
     else:
-        info = get_breed_info(breed)
+        info = get_info(breed)
         
-        # Split Screen Layout
-        left_col, right_col = st.columns([1, 1.3], gap="large")
+        # Split Layout
+        col_left, col_right = st.columns([1, 1.4], gap="large")
         
-        # LEFT: Profile Card
-        with left_col:
+        # LEFT: ID CARD
+        with col_left:
+            st.markdown('<div class="id-card">', unsafe_allow_html=True)
             st.image(data['image'], use_container_width=True)
             
-            # Clean HTML Block (No Breaks)
             st.markdown(f"""
-            <div class="profile-card">
-                <span class="confidence-tag">Match: {conf:.1f}%</span>
-                <h1 class="breed-title">{breed}</h1>
-                <p style="color:#64748B; margin-bottom:20px;">{info['Bio']}</p>
+                <div class="id-header">
+                    <div class="match-badge">Match: {conf:.1f}%</div>
+                    <h1 class="breed-name">{breed}</h1>
+                    <p style="color:#718096; margin:0;">{info['Group']} Group</p>
+                </div>
                 
-                <div class="data-row">
-                    <span class="data-label">Origin</span>
-                    <span class="data-value">{info['Origin']}</span>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-label">Origin</div>
+                        <div class="stat-value">{info['Origin']}</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Lifespan</div>
+                        <div class="stat-value">{info['Life']}</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Height</div>
+                        <div class="stat-value">{info['Height']}</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Temperament</div>
+                        <div class="stat-value" style="font-size:14px;">{info['Temperament']}</div>
+                    </div>
                 </div>
-                <div class="data-row">
-                    <span class="data-label">Lifespan</span>
-                    <span class="data-value">{info['Life']}</span>
-                </div>
-                <div class="data-row">
-                    <span class="data-label">Group</span>
-                    <span class="data-value">{info['Group']}</span>
+                
+                <div class="bio-section">
+                    "{info['Bio']}"
                 </div>
             </div>
             """, unsafe_allow_html=True)
             
             st.markdown("<br>", unsafe_allow_html=True)
-            if st.button("⬅ Upload New Photo"): reset_app()
+            if st.button("⬅ Scan New Dog"): reset()
 
-        # RIGHT: Chat Interface
-        with right_col:
+        # RIGHT: CHATBOT
+        with col_right:
             st.markdown(f"""
-            <div class="chat-header">
-                <span>💬</span> Chat with {breed} Expert
-            </div>
+            <div class="chat-panel">
+                <div class="chat-header-bar">
+                    <span>💬</span> Ask about {breed}s
+                </div>
             """, unsafe_allow_html=True)
             
-            # Message History
-            chat_container = st.container(height=500)
+            # Chat History Scroller
+            chat_container = st.container(height=550)
             with chat_container:
                 for msg in st.session_state.chat_history:
-                    bubble_class = "user-bubble" if msg["role"] == "user" else "bot-bubble"
+                    css = "user-msg" if msg["role"] == "user" else "bot-msg"
                     align = "flex-end" if msg["role"] == "user" else "flex-start"
                     
                     st.markdown(f"""
-                    <div style="display:flex; justify-content:{align}; margin-bottom:10px;">
-                        <div class="chat-bubble {bubble_class}">
-                            {msg["content"]}
+                        <div style="display:flex; justify-content:{align}; margin-bottom:10px;">
+                            <div class="chat-bubble {css}">{msg["content"]}</div>
                         </div>
-                    </div>
                     """, unsafe_allow_html=True)
             
-            # Input
-            if prompt := st.chat_input(f"Ask about {breed}..."):
+            st.markdown("</div>", unsafe_allow_html=True) # End chat panel
+
+            # Chat Input (Outside the custom HTML box to allow interaction)
+            if prompt := st.chat_input(f"Ask about diet, grooming, or training..."):
                 st.session_state.chat_history.append({"role": "user", "content": prompt})
-                reply = smart_reply(breed, prompt)
-                st.session_state.chat_history.append({"role": "bot", "content": reply})
+                reply = smart_bot_response(breed, prompt)
+                st.session_state.chat_history.append({"role": "assistant", "content": reply})
                 st.rerun()
