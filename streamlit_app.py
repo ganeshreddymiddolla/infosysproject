@@ -14,6 +14,7 @@ import numpy as np
 import os
 import time
 from PIL import Image, ImageOps
+import tensorflow as tf
 
 # ==============================================================================
 # 1. APPLICATION CONFIGURATION & CONSTANTS
@@ -66,6 +67,12 @@ def inject_custom_css():
         #MainMenu {visibility: hidden;}
         header {visibility: hidden;}
         footer {visibility: hidden;}
+        
+        /* Remove top padding */
+        .block-container {
+            padding-top: 1rem;
+            padding-bottom: 5rem;
+        }
 
         /* -----------------------------------------------------------
            TYPOGRAPHY
@@ -166,7 +173,7 @@ def inject_custom_css():
             border-radius: 20px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.06);
             padding: 20px;
-            height: 700px;
+            min-height: 600px;
             display: flex;
             flex-direction: column;
         }
@@ -260,8 +267,6 @@ inject_custom_css()
 # ==============================================================================
 # 3. COMPREHENSIVE BREED DATABASE (The "Brain")
 # ==============================================================================
-# This dictionary serves as the knowledge base for both the UI Stats and the Chatbot.
-# It covers a wide range of popular breeds found in the Stanford Dogs dataset.
 
 BREED_KNOWLEDGE_BASE = {
     # --- WORKING GROUP ---
@@ -317,7 +322,7 @@ BREED_KNOWLEDGE_BASE = {
         "Diet": "Giant breed formula. crucial to prevent growing too fast (bone issues).",
         "Climate": "Moderate climates. Short coat offers little protection from cold.",
         "Grooming": "Low maintenance.",
-        "Training": " gentle giant, but needs obedience training due to size.",
+        "Training": "gentle giant, but needs obedience training due to size.",
         "Bio": "The easygoing Great Dane, the 'Apollo of Dogs', is a total joy to live with—but owning a dog of such imposing size, weight, and strength is a commitment not to be entered into lightly."
     },
 
@@ -463,8 +468,6 @@ def load_model_engine():
     Loads the Keras model and the class names file.
     Uses caching to prevent reloading on every interaction (Speed optimization).
     """
-    import tensorflow as tf
-    
     # Check if files exist
     if not os.path.exists(MODEL_FILE_PATH):
         return None, None
@@ -488,8 +491,6 @@ def preprocess_image(image):
     2. Resizes to 224x224 (Model Requirement)
     3. Converts to Array and adds Batch Dimension
     """
-    import tensorflow as tf
-    
     img = image.convert('RGB')
     img = ImageOps.fit(img, (IMG_WIDTH, IMG_HEIGHT), Image.LANCZOS)
     img_array = tf.keras.preprocessing.image.img_to_array(img)
@@ -754,7 +755,6 @@ def main():
         if file:
             # Perform Analysis
             with st.spinner("🧠 AI is analyzing breed features..."):
-                import tensorflow as tf
                 
                 # Check for Model
                 if not os.path.exists(MODEL_FILE_PATH):
